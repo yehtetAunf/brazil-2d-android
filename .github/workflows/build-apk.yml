@@ -29,10 +29,7 @@ jobs:
         run: |
           rm -rf android-project
           mkdir -p android-project
-
-          unzip -o brazil-2d-android-fixed.zip -d android-project
-
-          echo "===== PROJECT FILES ====="
+          unzip -o Brazil2D_ChromeSize_Fixed.zip -d android-project
           find android-project -maxdepth 6 -type f | sort
 
       - name: Build APK
@@ -45,17 +42,11 @@ jobs:
           fi
 
           PROJECT_DIR=$(dirname "$BUILD_FILE")
-
-          echo "Build file: $BUILD_FILE"
-          echo "Project directory: $PROJECT_DIR"
-
           cd "$PROJECT_DIR"
-
           gradle assembleDebug --no-daemon
 
       - name: Find APK
         run: |
-          echo "===== APK FILES ====="
           find android-project -name "*.apk" -type f -print
 
       - name: Upload APK
