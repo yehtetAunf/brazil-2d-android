@@ -20,17 +20,26 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Unzip Android project
+        run: |
+          unzip Brazil2D_Android_Project-1.zip -d android-project
+          ls -la android-project
+          find android-project -maxdepth 3 -name gradlew -type f -print
 
       - name: Make Gradle executable
-        run: chmod +x gradlew
+        run: |
+          GRADLEW=$(find android-project -name gradlew -type f | head -n 1)
+          chmod +x "$GRADLEW"
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: |
+          GRADLEW=$(find android-project -name gradlew -type f | head -n 1)
+          PROJECT_DIR=$(dirname "$GRADLEW")
+          cd "$PROJECT_DIR"
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Brazil-2D-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: android-project/**/app/build/outputs/apk/debug/*.apk
